@@ -1,5 +1,5 @@
-FROM hpess/chef:latest
-MAINTAINER Karl Stoney <karl.stoney@hp.com>
+FROM hpess/chef:master
+MAINTAINER Karl Stoney <karl.stoney@hp.com> 
  
 RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.0.tgz && \  
     tar -zxf mongodb-linux-*.tgz && \
