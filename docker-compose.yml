@@ -1,0 +1,6 @@
+mongodb:
+  image: hpess/mongodb
+  ports:
+    - "27017:27017"
+    - "28017:28017"
+

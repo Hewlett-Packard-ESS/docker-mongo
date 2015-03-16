@@ -1,18 +1,19 @@
 FROM hpess/chef:master
-MAINTAINER Paul Cooke <karl.stoney@hp.com>
+MAINTAINER Karl Stoney <karl.stoney@hp.com> 
  
-RUN curl -s -O http://downloads.mongodb.org/linux/mongodb-linux-x86_64-2.6.7.tgz && \  
-tar -zxvf mongodb-linux-x86_64-2.6.7.tgz && \
-rm *.tgz && \
-mv mongodb-linux* /opt/mongodb
+RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.0.tgz && \  
+    tar -zxf mongodb-linux-*.tgz && \
+    rm *.tgz && \
+    mv mongodb-linux* /opt/mongodb && \
+    chown -R docker:docker /opt/mongodb
 
 ENV PATH="/opt/mongodb/bin:$PATH"
+
 COPY services/* /etc/supervisord.d/
+COPY cookbooks/ /chef/cookbooks/
 
-# Add our preboot scripts
-COPY preboot/* /preboot/
-
-# Expose ports.
-#   - 27017: process
-#   - 28017: http
 EXPOSE 27017 28017
+
+ENV HPESS_ENV mongodb
+ENV chef_node_name mongodb.docker.local
+ENV chef_run_list mongodb
