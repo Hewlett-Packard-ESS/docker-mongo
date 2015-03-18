@@ -37,7 +37,7 @@ function init_replSet()
 {
 	if ! replSet_initted; then
 		debug "Initialising ReplicaSet..."
-		mongocmd "rs.initiate()"
+		mongocmd "rs.initiate({_id:'<%= @replSet %>',members:[{_id:0,host:'<%= @hostname %>'}]})"
 		sleep 2
 		debug "ReplicaSet initiated!"
 	else
@@ -48,28 +48,29 @@ function init_replSet()
 function add_replMember()
 {
 	member="$1"
-	debug "Adding $1 to the replica set..." 
-	block_until_isup "$member"
-	mongocmd "rs.add(\"$member\")"
+	if ! inreplset "$1"; then
+		debug "Adding $1 to the replica set..." 
+		block_until_isup "$member"
+		mongocmd "rs.add(\"$member\")"
+	else
+		debug "$1 is already in the replica set."
+	fi
 }
 
 function start()
 {
 	mkdir -p /storage/db
-	HOSTNAME=${HOSTNAME:-127.0.0.1}
-	me="$HOSTNAME:27017"
+	me="127.0.0.1:27017"
 
 	/opt/mongodb/bin/mongod <%= @cmd %> & 
 	parent=$! 
 
 	# Wait until mongo is up...
 	block_until_isup "$me" 
-	<% if @replSet == true and @repl_members.length > 0 %>
+	<% if !@replSet.nil? and @repl_members.length > 0 %>
 		init_replSet
 		<% @repl_members.each do |repl| %>
-			if ! inreplset "<%= repl %>"; then
-				add_replMember "<%= repl %>"
-			fi
+			add_replMember "<%= repl %>"
 		<% end %>
 	<% end %>
 

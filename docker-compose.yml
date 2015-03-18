@@ -6,6 +6,7 @@ mongodb1:
     - noprealloc=true
     - smallfiles=true
     - replSet=rs1
+    - fqdn="mongodb1"
     - replMembers=172.17.42.1:27018,172.17.42.1:27019
   ports:
     - "172.17.42.1:27017:27017"
