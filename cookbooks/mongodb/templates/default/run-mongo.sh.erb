@@ -30,7 +30,7 @@ function inreplset()
 
 function replSet_initted()
 {
-	mongocmd "rs.status()" | grep -qv "no replset config has been received"
+	mongocmd "rs.status()" | grep "\"info\"" | grep -qv "not yet done for the set"
 }
 
 function init_replSet()
@@ -38,6 +38,8 @@ function init_replSet()
 	if ! replSet_initted; then
 		debug "Initialising ReplicaSet..."
 		mongocmd "rs.initiate()"
+		sleep 2
+		debug "ReplicaSet initiated!"
 	else
 		debug "Replica set already initiated."
 	fi
@@ -54,6 +56,7 @@ function add_replMember()
 function start()
 {
 	mkdir -p /storage/db
+	HOSTNAME=${HOSTNAME:-127.0.0.1}
 	me="$HOSTNAME:27017"
 
 	/opt/mongodb/bin/mongod <%= @cmd %> & 
@@ -63,7 +66,6 @@ function start()
 	block_until_isup "$me" 
 	<% if @replSet == true and @repl_members.length > 0 %>
 		init_replSet
-
 		<% @repl_members.each do |repl| %>
 			if ! inreplset "<%= repl %>"; then
 				add_replMember "<%= repl %>"
