@@ -17,9 +17,13 @@ end
 
 cfg = {
 	"cmd" => "--httpinterface --rest --directoryperdb --dbpath /storage/db",
-	"replSet" => !ENV['replSet'].nil?,
-	"repl_members" => []
+	"replSet" => ENV['replSet'],
+	"repl_members" => [],
+	"hostname" => ENV['fqdn'] || ENV['HOSTNAME']
 }
+
+cfg['hostname'] = "#{cfg['hostname']}:27017"
+
 add_cmd(cfg, '--noprealloc', 'noprealloc')
 add_cmd(cfg, '--smallfiles', 'nosmallfiles')
 add_cmd(cfg, '--replSet', 'replSet', true)
