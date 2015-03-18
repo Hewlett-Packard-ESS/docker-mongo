@@ -67,12 +67,12 @@ function start()
 
 	# Wait until mongo is up...
 	block_until_isup "$me" 
-	<% if !@replSet.nil? and @repl_members.length > 0 %>
-		init_replSet
-		<% @repl_members.each do |repl| %>
-			add_replMember "<%= repl %>"
-		<% end %>
+<% if !@replSet.nil? and @repl_members.length > 0 %>
+	init_replSet
+	<% @repl_members.each do |repl| %>
+		add_replMember "<%= repl %>"
 	<% end %>
+<% end %>
 
 	info "Mongo is good to go."
 	wait $parent
