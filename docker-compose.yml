@@ -1,39 +1,38 @@
 mongodb1:
   hostname: 'mongodb1'
   image: hpess/mongodb
+  restart: 'always'
   environment:
     - DEBUG=true
     - noprealloc=true
     - smallfiles=true
     - replSet=rs1
-    - fqdn="mongodb1"
+    - fqdn=172.17.42.1
     - replMembers=172.17.42.1:27018,172.17.42.1:27019
   ports:
-    - "172.17.42.1:27017:27017"
+    - "27017:27017"
     - "28017:28017"
 
 mongodb2:
   hostname: 'mongodb2'
   image: hpess/mongodb
+  restart: 'always'
   environment:  
     - DEBUG=true
     - noprealloc=true
     - smallfiles=true
     - replSet=rs1
   ports:
-    - "172.17.42.1:27018:27017"
-  links:
-    - "mongodb1:mongodb1"
+    - "27018:27017"
 
 mongodb3:
   hostname: 'mongodb3'
   image: hpess/mongodb
+  restart: 'always'
   environment:
     - DEBUG=true
     - noprealloc=true
     - smallfiles=true
     - replSet=rs1
   ports:
-    - "172.17.42.1:27019:27017"
-  links:
-    - "mongodb1:mongodb1"
+    - "27019:27017"

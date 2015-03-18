@@ -8,12 +8,12 @@ RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.
     chown -R docker:docker /opt/mongodb
 
 ENV PATH="/opt/mongodb/bin:$PATH"
-
-COPY services/* /etc/supervisord.d/
-
-EXPOSE 27017 28017
-
 ENV HPESS_ENV mongodb
 ENV chef_node_name mongodb.docker.local
 ENV chef_run_list mongodb
+
+EXPOSE 27017 28017
+
+COPY services/* /etc/supervisord.d/
 COPY cookbooks/ /chef/cookbooks/
+
