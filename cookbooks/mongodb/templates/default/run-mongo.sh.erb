@@ -1,0 +1,100 @@
+#!/bin/bash
+set -e
+ulimit -n 1024
+
+function mongocmd() 
+{
+	debug "Executing: $1"
+	echo $1 | mongo --quiet
+}
+
+function isup() 
+{
+	echo "db.serverStatus()" | mongo --quiet --host $1 | grep -q 'ok'
+}
+
+function block_until_isup()
+{
+	set +e
+	while ! isup "$1" >/dev/null 2>&1; do
+		debug "Waiting for $1 to come up..."
+		sleep 5
+	done
+	set -e
+}
+
+function inreplset()
+{
+	mongocmd "rs.status()" | grep -q '"name" : "$1"'
+}
+
+function replSet_initted()
+{
+	mongocmd "rs.status()" | grep "\"info\"" | grep -qv "not yet done for the set"
+}
+
+function init_replSet()
+{
+	if ! replSet_initted; then
+		debug "Initialising ReplicaSet..."
+		mongocmd "rs.initiate()"
+		sleep 2
+		debug "ReplicaSet initiated!"
+	else
+		debug "Replica set already initiated."
+	fi
+}
+
+function add_replMember()
+{
+	member="$1"
+	debug "Adding $1 to the replica set..." 
+	block_until_isup "$member"
+	mongocmd "rs.add(\"$member\")"
+}
+
+function start()
+{
+	mkdir -p /storage/db
+	HOSTNAME=${HOSTNAME:-127.0.0.1}
+	me="$HOSTNAME:27017"
+
+	/opt/mongodb/bin/mongod <%= @cmd %> & 
+	parent=$! 
+
+	# Wait until mongo is up...
+	block_until_isup "$me" 
+	<% if @replSet == true and @repl_members.length > 0 %>
+		init_replSet
+		<% @repl_members.each do |repl| %>
+			if ! inreplset "<%= repl %>"; then
+				add_replMember "<%= repl %>"
+			fi
+		<% end %>
+	<% end %>
+
+	info "Mongo is good to go."
+	wait $parent
+}
+
+function stop()
+{
+	echo Stopping MongoDb...
+	kill -TERM $parent
+	echo Stopped!
+	exit 0
+}
+
+function restart()
+{   
+	echo "shit happens.... restart didnt."
+}
+
+trap stop TERM INT
+trap restart SIGHUP
+
+start
+
+while true; do
+	sleep 1000 & wait
+done
