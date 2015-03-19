@@ -1,6 +1,6 @@
 mongodb1:
   hostname: 'mongodb1'
-  image: hpess/mongodb
+  image: hpess/mongodb:master
   restart: 'always'
   environment:
     - DEBUG=true
@@ -15,7 +15,7 @@ mongodb1:
 
 mongodb2:
   hostname: 'mongodb2'
-  image: hpess/mongodb
+  image: hpess/mongodb:master
   restart: 'always'
   environment:  
     - DEBUG=true
@@ -27,7 +27,7 @@ mongodb2:
 
 mongodb3:
   hostname: 'mongodb3'
-  image: hpess/mongodb
+  image: hpess/mongodb:master
   restart: 'always'
   environment:
     - DEBUG=true

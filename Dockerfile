@@ -1,8 +1,6 @@
 FROM hpess/chef:master
 MAINTAINER Karl Stoney <karl.stoney@hp.com> 
 
-ENV http_proxy=http://proxy.sdc.hp.com:8080
-ENV https_proxy=http://proxy.sdc.hp.com:8080
 RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.0.tgz && \  
     tar -zxf mongodb-linux-*.tgz && \
     rm *.tgz && \
