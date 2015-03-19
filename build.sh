@@ -1,1 +1,1 @@
-docker build -t hpess/mongodb:latest .
+docker build -t hpess/mongodb:master .
