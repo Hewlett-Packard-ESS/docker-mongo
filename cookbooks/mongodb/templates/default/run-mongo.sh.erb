@@ -8,6 +8,12 @@ function mongocmd()
 	echo $1 | mongo --quiet
 }
 
+function mongoadmin() 
+{
+	debug "Executing: $1 against the Admin database"
+	echo $1 | mongo --quiet admin
+}
+
 function isup() 
 {
 	echo "db.serverStatus()" | mongo --quiet --host $1 | grep -q 'ok'
@@ -73,29 +79,21 @@ function start()
 		add_replMember "<%= repl %>"
 	<% end %>
 <% end %>
-
-	info "Mongo is good to go."
-	wait $parent
 }
 
 function stop()
 {
-	echo Stopping MongoDb...
-	kill -TERM $parent
-	echo Stopped!
-	exit 0
-}
-
-function restart()
-{   
-	echo "shit happens.... restart didnt."
+	info "Stopping MongoDb..."
+	(sleep 0.5 && kill -TERM $parent) &
+	wait $parent
+	exit_code=$?
+	info "MongoDb Stopped! Exit code was $exit_code"
+	sleep 1
+	exit $exit_code
 }
 
 trap stop TERM INT
-trap restart SIGHUP
 
 start
-
-while true; do
-	sleep 1000 & wait
-done
+info "Mongo is good to go."
+wait $parent
