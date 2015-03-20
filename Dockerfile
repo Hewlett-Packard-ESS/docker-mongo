@@ -7,6 +7,14 @@ RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.
     mv mongodb-linux* /opt/mongodb && \
     chown -R docker:docker /opt/mongodb
 
+RUN echo 'mongod soft nofile 64000' >> /etc/security/limits.conf && \
+    echo 'mongod hard nofile 64000' >> /etc/security/limits.conf && \
+    echo 'mongod soft nproc 32000' >> /etc/security/limits.conf && \
+    echo 'mongod hard nproc 32000' >> /etc/security/limits.conf && \
+    echo 'mongod soft nproc 32000' >> /etc/security/limits.d/90-nproc.conf && \
+    echo 'mongod hard nproc 32000' >> /etc/security/limits.d/90-nproc.conf
+
+
 ENV PATH="/opt/mongodb/bin:$PATH"
 ENV HPESS_ENV mongodb
 ENV chef_node_name mongodb.docker.local
