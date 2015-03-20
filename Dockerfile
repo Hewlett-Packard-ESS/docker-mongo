@@ -16,4 +16,4 @@ EXPOSE 27017 28017
 
 COPY services/* /etc/supervisord.d/
 COPY cookbooks/ /chef/cookbooks/
-
+COPY preboot/* /preboot/
