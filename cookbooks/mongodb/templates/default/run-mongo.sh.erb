@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 ulimit -n 1024
 
 function mongocmd() 
@@ -21,22 +20,20 @@ function isup()
 
 function block_until_isup()
 {
-	set +e
 	while ! isup "$1" >/dev/null 2>&1; do
 		debug "Waiting for $1 to come up..."
 		sleep 5
 	done
-	set -e
 }
 
 function inreplset()
 {
-	mongocmd "rs.status()" | grep -q '"name" : "$1"'
+	! mongocmd "rs.status()" | grep -q '"name" : "$1"'
 }
 
 function replSet_initted()
 {
-	! mongocmd "rs.status()" | grep "\"info\"" | grep -qv "not yet done for the set"
+	! mongocmd "rs.status()" | grep "\"info\"" | grep -q "not yet done for the set"
 }
 
 function init_replSet()
@@ -54,12 +51,12 @@ function init_replSet()
 function add_replMember()
 {
 	member="$1"
-	if ! inreplset "$1"; then
-		debug "Adding $1 to the replica set..." 
+	if ! inreplset "$member"; then
+		debug "Adding $member to the replica set..." 
 		block_until_isup "$member"
 		mongocmd "rs.add(\"$member\")"
 	else
-		debug "$1 is already in the replica set."
+		debug "$member is already in the replica set."
 	fi
 }
 
