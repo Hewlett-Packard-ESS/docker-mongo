@@ -73,7 +73,8 @@ function start()
 
 	# Wait until mongo is up...
 	block_until_isup "$me" 
-<% if !@replSet.nil? %>
+<% if !@replSet.nil? and @repl_members.length > 0 %>
+	# Do the replica set
 	init_replSet
 	<% @repl_members.each do |repl| %>
 	add_replMember "<%= repl %>"
