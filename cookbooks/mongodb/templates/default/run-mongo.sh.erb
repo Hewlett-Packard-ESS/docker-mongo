@@ -36,7 +36,7 @@ function inreplset()
 
 function replSet_initted()
 {
-	mongocmd "rs.status()" | grep "\"info\"" | grep -qv "not yet done for the set"
+	! mongocmd "rs.status()" | grep "\"info\"" | grep -qv "not yet done for the set"
 }
 
 function init_replSet()
