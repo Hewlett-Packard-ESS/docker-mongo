@@ -9,7 +9,6 @@ RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.
 
 RUN echo '* - nofile 64000' >> /etc/security/limits.conf && \
     echo '* - nproc 32000' >> /etc/security/limits.conf && \
-    echo '* - nproc 32000' >> /etc/security/limits.d/90-nproc.conf && \
     echo '* - nproc 32000' >> /etc/security/limits.d/90-nproc.conf
 
 ENV PATH="/opt/mongodb/bin:$PATH"
