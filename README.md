@@ -1,6 +1,6 @@
 ![MongoDB](/mongodb.jpeg?raw=true "MongoDB")
 
-Builds on the hpess/chef image by installing MongoDB, currently version 3.0.0.  With simple replica set support.
+Builds on the hpess/chef image by installing MongoDB, currently version 3.0.1.  With simple replica set support.
 
 ## Use
 As per all our other containers, a simple docker compose file will get you up a single instance nice and easy.  This will start a container bound to the default mongo ports.
