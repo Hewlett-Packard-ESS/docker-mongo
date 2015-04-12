@@ -28,7 +28,7 @@ function block_until_isup()
 
 function inreplset()
 {
-	! mongocmd "rs.status()" | grep -q '"name" : "$1"'
+	mongocmd "rs.status()" | grep -q '"name" : "$1"'
 }
 
 function replSet_initted()
