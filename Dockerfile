@@ -1,7 +1,7 @@
 FROM hpess/chef:master
 MAINTAINER Karl Stoney <karl.stoney@hp.com> 
 
-RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.2.tgz && \  
+RUN curl -s -O https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-3.0.4.tgz && \  
     tar -zxf mongodb-linux-*.tgz && \
     rm *.tgz && \
     mv mongodb-linux* /opt/mongodb && \
